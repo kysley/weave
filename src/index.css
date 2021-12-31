@@ -35,15 +35,20 @@ code {
 /* .peer-container__meta */
 
 .peer-container__header {
-  display: flex;
-  flex-direction: column;
+  /* display: flex; */
+  align-items: center;
+  /* flex-direction: column; */
 }
 
 .peer-container__header span {
   font-size: .785rem;
   font-style: italic;
+  margin-right: 1em;
+}
+.peer-container__header h3 {
+  font-size: 1rem;
+  font-style: italic;
+  margin-right: 1em;
+  margin: 0;
 }
 
-.peer-container__header span:last-child {
-  font-size: .9rem;
-}

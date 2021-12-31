@@ -1,43 +1,25 @@
-import { useEffect, useRef, useState } from "react";
 import { useMatch } from "react-location";
 
-import { useDownload, usePeer } from "../hooks";
+import { useDownload, usePeer, usePeerConnection } from "../hooks";
+import { useWeaveCode } from "../hooks/use-weave-code.hook";
+import { Bone } from "./bone";
 
 export function PeerView() {
   const { download } = useDownload();
-  const { id, peer } = usePeer();
-
-  const [connection, setConnectionState] = useState<boolean>(false);
-  const [transferStatus, setTransferStatus] = useState<boolean | "DONE">(false);
-
-  const chunks = useRef<string[]>([]);
-  const fileBlob = useRef<Blob>();
 
   const match = useMatch();
 
-  useEffect(() => {
-    peer.on("open", (myId) => {
-      const connection = peer.connect(match.params.id);
+  const { data: targetPeerId, isLoading } = useWeaveCode(match.params.code);
+  const { id } = usePeer();
+  const { fileBlob, state, transferStatus } = usePeerConnection(targetPeerId!);
 
-      connection.on("open", () => {
-        setConnectionState(true);
-        console.log("connection ready");
-      });
-      connection.on("data", function (data) {
-        setTransferStatus(true);
-        console.log(data);
-        if (data.toString() === "EOF") {
-          const file = new Blob(chunks.current, { type: "jpg" });
-          fileBlob.current = file;
-          setTransferStatus("DONE");
-          return;
-        }
-
-        chunks.current.push(data);
-      });
-      connection.on("error", console.log);
-    });
-  }, []);
+  if (state !== "CONNECTED" || isLoading) {
+    return (
+      <div>
+        <Bone />
+      </div>
+    );
+  }
 
   const handleDownload = () => {
     if (!fileBlob.current) return;
@@ -52,10 +34,13 @@ export function PeerView() {
       className="peer-container"
     >
       <header className="peer-container__header">
-        <span>you: {id}</span>
+        <span>
+          you {"->"} {id}
+        </span>
+        <h3>{match.params.code}</h3>
       </header>
-      <span>peer: {match.params.id} </span>
-      <span>connected: {connection.toString()}</span>
+      <span>peer: {targetPeerId} </span>
+      <span>state: {state}</span>
       <span>transfer: {transferStatus.toString()}</span>
       <div>
         {transferStatus === "DONE" ? (

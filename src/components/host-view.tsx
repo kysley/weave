@@ -1,14 +1,30 @@
-import { useEffect, useState } from "react";
-import Peer from "peerjs";
+import { useEffect } from "react";
 import { Link } from "react-location";
 
 import { usePeer } from "../hooks/use-peer.hook";
+import { useCreateWeaveCode } from "../hooks/use-weave-code.hook";
+import { Bone } from "./bone";
 
 export function HostView() {
-  const { connection, id } = usePeer();
+  const { conn, id, state } = usePeer();
+  const { data: code, mutate, isLoading } = useCreateWeaveCode();
+
+  useEffect(() => {
+    if (!id) return;
+
+    mutate(id);
+  }, [id]);
+
+  if (!id || isLoading) {
+    return (
+      <div>
+        <Bone />
+      </div>
+    );
+  }
 
   const handleChange = (e: any) => {
-    if (connection) {
+    if (conn) {
       console.log("hey");
       const firstFile = e.target.files[0];
 
@@ -17,26 +33,43 @@ export function HostView() {
         while (buffer.byteLength) {
           const chunk = buffer.slice(0, chunkSize);
           buffer = buffer.slice(chunkSize, buffer.byteLength);
-          connection.send(chunk);
+          conn.send(chunk);
         }
-        connection.send("EOF");
+        conn.send("EOF");
       });
-
-      // conn.send({
-      //   file: new Blob(e.target.files, { type: file.type }),
-      //   name: file.name,
-      //   type: file.type,
-      // });
     }
   };
   return (
     <div className="peer-container">
       <header className="peer-container__header">
-        <span>me</span>
-        {/* <Link to={`/p/${id}`}>{id}</Link> */}
-        <span>{id}</span>
+        <span>
+          you {"->"} {id}
+        </span>
       </header>
+      <WeaveCode code={code!} />
+      {/* <span>peer: {conn} </span> */}
+      <span>state: {state}</span>
+      {/* <span>transfer: {transferStatus.toString()}</span>
+      <div>
+        {transferStatus === "DONE" ? (
+          <button onClick={handleDownload} type="button">
+            download
+          </button>
+        ) : (
+          <span>Waiting for file...</span>
+        )}
+      </div> */}
       <input type="file" accept="image/*" onChange={handleChange} />
+    </div>
+  );
+}
+
+function WeaveCode({ code }: { code: string }) {
+  return (
+    <div>
+      <Link to={`/w/${code}`} target={"_blank"}>
+        {`>>\ ${code}\ <<`}
+      </Link>
     </div>
   );
 }
