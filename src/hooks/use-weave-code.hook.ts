@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "react-query";
 
 const url =
   process.env.NODE_ENV === "production"
-    ? "http://e8y.fun/peermanager"
+    ? "https://e8y.fun/peermanager"
     : "http://localhost:3001/peermanager";
 
 export function useWeaveCode(code: string) {
