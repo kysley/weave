@@ -1,10 +1,9 @@
 import ky from "ky";
 import { useMutation, useQuery } from "react-query";
 
-const url =
-  process.env.NODE_ENV === "production"
-    ? "https://api.e8y.fun/weave"
-    : "http://localhost:3001/";
+const url = process.env.REMOTE
+  ? "https://api.e8y.fun/weave"
+  : "http://localhost:3001/";
 
 export function useWeaveCode(code: string) {
   return useQuery(
