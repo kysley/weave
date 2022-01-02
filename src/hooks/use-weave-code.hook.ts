@@ -1,6 +1,6 @@
 import ky from "ky";
 import { useMutation, useQuery } from "react-query";
-
+console.log(process.env.CONTEXT);
 const url =
   process.env.CONTEXT === "production"
     ? "https://api.e8y.fun/weave"
