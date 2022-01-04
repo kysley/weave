@@ -851,10 +851,10 @@ react-dom@^17.0.2:
     object-assign "^4.1.1"
     scheduler "^0.20.2"
 
-react-location@^3.2.16:
-  version "3.2.16"
-  resolved "https://registry.yarnpkg.com/react-location/-/react-location-3.2.16.tgz#99ac15cd00b965d50923e55b7c15d24e75db8964"
-  integrity sha512-Rd7uTsmQSGenHkkvjatyoNQdlV6hl3kwyjRsr8jdW3UprOIXbZH1RdUpfn2EdTK8v+YxTPJrxzBENEoiDLnswA==
+react-location@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/react-location/-/react-location-3.3.0.tgz#325059e0bea55e0441e82d7591872f2361f7b203"
+  integrity sha512-0ME2sVcldYcTGB4DxbD+00wuXHY9NeACjhub3+MKOsBxnTSMQ5P2XWZZwql5IyL9Fj9IL1CjdUnoT4hCL1bCCQ==
   dependencies:
     "@babel/runtime" "^7.15.4"
     core-js "^3.18.3"
@@ -985,10 +985,10 @@ ts-toolbelt@^9.6.0:
   resolved "https://registry.yarnpkg.com/ts-toolbelt/-/ts-toolbelt-9.6.0.tgz#50a25426cfed500d4a09bd1b3afb6f28879edfd5"
   integrity sha512-nsZd8ZeNUzukXPlJmTBwUAuABDe/9qtVDelJeT/qW0ow3ZS3BsQJtNkan1802aM9Uf68/Y8ljw86Hu0h5IUW3w==
 
-typescript@^4.4.4:
-  version "4.5.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.5.3.tgz#afaa858e68c7103317d89eb90c5d8906268d353c"
-  integrity sha512-eVYaEHALSt+s9LbvgEv4Ef+Tdq7hBiIZgii12xXJnukryt3pMgJf6aKhoCZ3FWQsu6sydEnkg11fYXLzhLBjeQ==
+typescript@^4.5.4:
+  version "4.5.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.5.4.tgz#a17d3a0263bf5c8723b9c52f43c5084edf13c2e8"
+  integrity sha512-VgYs2A2QIRuGphtzFV7aQJduJ2gyfTljngLzjpfW9FoYZF6xuw1W0vW9ghCKLfcWrCFxK81CSGRAvS1pn4fIUg==
 
 unload@2.2.0:
   version "2.2.0"
@@ -998,10 +998,10 @@ unload@2.2.0:
     "@babel/runtime" "^7.6.2"
     detect-node "^2.0.4"
 
-vite@^2.7.9:
-  version "2.7.9"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-2.7.9.tgz#c72d8817cdddbb127daed0c8f87fbca4e7754a81"
-  integrity sha512-CyopIJIRrc26Wnbkch5BCHFhQodzeV4jjSegLAEw1RImvXSuoOo2SfpEW9zRVi188WmjJwCqCaoG25C0r4nekw==
+vite@^2.7.10:
+  version "2.7.10"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-2.7.10.tgz#d12c4c10e56a0ecf7890cb529c15996c6111218f"
+  integrity sha512-KEY96ntXUid1/xJihJbgmLZx7QSC2D4Tui0FdS0Old5OokYzFclcofhtxtjDdGOk/fFpPbHv9yw88+rB93Tb8w==
   dependencies:
     esbuild "^0.13.12"
     postcss "^8.4.5"
