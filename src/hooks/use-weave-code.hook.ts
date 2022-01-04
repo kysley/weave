@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "react-query";
 
 const url = import.meta.env.PROD
   ? "https://api.e8y.fun/weave"
-  : "http://localhost:3001/";
+  : "http://localhost:3600/";
 
 export function useWeaveCode(code: string) {
   return useQuery(

@@ -1,9 +1,10 @@
 import { useEffect } from "react";
+import { WifiIcon } from "@heroicons/react/solid";
 
 import { usePeer } from "../hooks/use-peer.hook";
 import { useCreateWeaveCode } from "../hooks/use-weave-code.hook";
 import { css } from "../stitches.config";
-import { Box, Stack } from "./box";
+import { Box, Inlay, Stack } from "./box";
 import { Loader } from "./loader";
 import { Message } from "./message";
 import { WeaveCode } from "./weave-code";
@@ -69,7 +70,7 @@ export function HostView() {
       </div> */}
         </Box>
         <Box>
-          <span>state: {state}</span>
+          <WeaveActionBox />
           <input type="file" accept="image/*" onChange={handleChange} />
         </Box>
       </Stack>
@@ -77,7 +78,19 @@ export function HostView() {
   );
 }
 
-const WeaveActionBox = () => {};
+const WeaveActionBox = () => {
+  const { state } = usePeer();
+  return (
+    <Inlay>
+      <div>
+        <span>
+          <WifiIcon width={15} style={{ marginRight: "1em" }} />
+          {state?.toLowerCase()}
+        </span>
+      </div>
+    </Inlay>
+  );
+};
 
 const headerStyle = css({
   display: "flex",
