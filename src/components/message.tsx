@@ -1,8 +1,8 @@
-import { FC } from "react";
+import React, { FC } from "react";
 
 import { css } from "../stitches.config";
 
-type MessageType = "success" | "warning" | "error" | "default";
+type MessageType = "success" | "warning" | "error" | "default" | "firefox";
 
 type MessageProps = {
   title: string;
@@ -14,8 +14,8 @@ export const Message: FC<MessageProps> = ({
   description,
   type = "default",
 }) => (
-  <div className={containerStyles({ type: "default" })}>
-    <h2 className={titleStyle({})}>{title}</h2>
+  <div className={containerStyles({ type })}>
+    <h4 className={titleStyle({})}>{title}</h4>
     {description && <p>{description}</p>}
   </div>
 );
@@ -24,13 +24,29 @@ const containerStyles = css({
   // boxShadow: "$primary",
   background: "#c0c0c0",
   padding: ".25em 1em",
+  boxShadow: "#4d4c4c 4px 7px 6px",
   marginBottom: "1em",
+
+  p: {
+    margin: ".19em 0",
+  },
 
   variants: {
     type: {
       default: {
         border: "$blue 1px double",
-        boxShadow: "0 0 0 1px blue, #4d4c4c 4px 7px 6px",
+      },
+      firefox: {
+        border: "$orange 1px solid",
+      },
+      success: {
+        border: "$green 6px double",
+      },
+      warning: {
+        border: "$yellow 2px solid",
+      },
+      error: {
+        border: "$red 3px solid",
       },
     },
   },

@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { WifiIcon } from "@heroicons/react/solid";
+import React, { useEffect, useRef, useState } from "react";
+import { UserIcon, WifiIcon } from "@heroicons/react/solid";
 
 import { usePeer } from "../hooks/use-peer.hook";
 import { useCreateWeaveCode } from "../hooks/use-weave-code.hook";
@@ -9,69 +9,55 @@ import { Loader } from "./loader";
 import { Message } from "./message";
 import { WeaveCode } from "./weave-code";
 
-export function HostView() {
-  const { conn, id, state } = usePeer();
-  const { data: code, mutate, isLoading } = useCreateWeaveCode();
+const CHUNK_SIZE = 16 + 2024;
 
-  useEffect(() => {
-    if (!id) return;
+export function HostView({ code }: { code: string }) {
+  const { conn, id } = usePeer();
+  const stagedFileRef = useRef<File>();
 
-    mutate(id);
-  }, [id]);
-
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (conn) {
-      console.log("hey");
+      if (!e.target.files) return;
       const firstFile = e.target.files[0];
 
-      firstFile.arrayBuffer().then((buffer: any) => {
-        const chunkSize = 16 + 2024;
-        while (buffer.byteLength) {
-          const chunk = buffer.slice(0, chunkSize);
-          buffer = buffer.slice(chunkSize, buffer.byteLength);
-          conn.send(chunk);
-        }
-        conn.send("EOF");
+      stagedFileRef.current = firstFile;
+
+      conn.send({
+        type: "METADATA",
+        payload: {
+          size: firstFile.size,
+          type: firstFile.type,
+          name: firstFile.name,
+          chunks: firstFile.size / CHUNK_SIZE,
+        },
       });
     }
   };
+
+  const handleSend = () => {
+    if (!stagedFileRef.current || !conn) return;
+
+    stagedFileRef.current.arrayBuffer().then((buffer: any) => {
+      let chunkNum = 1;
+      while (buffer.byteLength) {
+        const chunk = buffer.slice(0, CHUNK_SIZE);
+        buffer = buffer.slice(CHUNK_SIZE, buffer.byteLength);
+        conn.send({ type: "CHUNK", payload: { chunk, chunkNum } });
+        chunkNum++;
+      }
+      conn.send({ type: "EOF" });
+    });
+  };
   return (
     <>
-      <Message title="Welcome to weave" type="success" />
-      {/* <Loader /> */}
       <Stack>
-        <Box css={{ width: "25vw" }}>
-          <header className={headerStyle()}>
-            {id ? (
-              <span>
-                you {"->"} {id}
-              </span>
-            ) : (
-              <span>
-                you {"->"} <Loader />
-              </span>
-            )}
-          </header>
-        </Box>
-        <Box css={{ width: "25vw" }}>
+        <Box>
           <WeaveCode code={code} />
-
-          {/* <span>peer: {conn} </span> */}
-
-          {/* <span>transfer: {transferStatus.toString()}</span>
-      <div>
-        {transferStatus === "DONE" ? (
-          <button onClick={handleDownload} type="button">
-            download
-          </button>
-        ) : (
-          <span>Waiting for file...</span>
-        )}
-      </div> */}
         </Box>
         <Box>
           <WeaveActionBox />
           <input type="file" accept="image/*" onChange={handleChange} />
+          <span onClick={handleSend}>send</span>
         </Box>
       </Stack>
     </>
@@ -84,26 +70,10 @@ const WeaveActionBox = () => {
     <Inlay>
       <div>
         <span>
-          <WifiIcon width={15} style={{ marginRight: "1em" }} />
+          <UserIcon width={15} style={{ marginRight: "1em" }} />
           {state?.toLowerCase()}
         </span>
       </div>
     </Inlay>
   );
 };
-
-const headerStyle = css({
-  display: "flex",
-  alignItems: "center",
-  span: {
-    fontSize: ".785rem",
-    fontStyle: "italic",
-    marginRight: "1em",
-  },
-  h3: {
-    fontSize: "1rem",
-    fontStyle: "italic",
-    marginRight: "1em",
-    margin: "0",
-  },
-});

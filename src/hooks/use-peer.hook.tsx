@@ -59,7 +59,16 @@ export const usePeerConnection = (peerId: string) => {
 
   const [state, setConnectionState] =
     useState<ConnectionStatusState>("DISCONNECTED");
-  const [transferStatus, setTransferStatus] = useState<boolean | "DONE">(false);
+  const [transferStatus, setTransferStatus] = useState<
+    "IN_PROGRESS" | "PENDING" | "DONE"
+  >();
+  const [fileMeta, setFileMeta] = useState<{
+    name: string;
+    type: string;
+    size: number;
+    chunks: number;
+    progress?: number;
+  }>({ name: "", type: "", size: 0, chunks: 0 });
 
   const chunks = useRef<string[]>([]);
   const fileBlob = useRef<Blob>();
@@ -72,20 +81,30 @@ export const usePeerConnection = (peerId: string) => {
       connection.on("close", () => setConnectionState("DISCONNECTED"));
       connection.on("error", () => setConnectionState("DISCONNECTED"));
       connection.on("data", function (data) {
-        setTransferStatus(true);
-        if (data.toString() === "EOF") {
-          const file = new Blob(chunks.current, { type: "jpg" });
+        let thisType;
+        if (data.type === "EOF") {
+          const file = new Blob(chunks.current, { type: thisType });
           fileBlob.current = file;
           setTransferStatus("DONE");
-          return;
+          thisType = undefined;
+          chunks.current = [];
+        } else if (data.type === "METADATA") {
+          setTransferStatus("PENDING");
+          thisType = data.payload.type;
+          setFileMeta(data.payload);
+        } else if (data.type === "CHUNK") {
+          setTransferStatus("IN_PROGRESS");
+          chunks.current.push(data.payload.chunk);
+          setFileMeta((prev) => ({
+            ...prev,
+            progress: (prev.chunks / data.payload.chunkNum) * 100,
+          }));
         }
-
-        chunks.current.push(data);
       });
     }
   }, [peerId, id, conn]);
 
-  return { state, transferStatus, fileBlob };
+  return { state, transferStatus, fileBlob, fileMeta };
 };
 
 export const usePeer = () => {

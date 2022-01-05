@@ -15,7 +15,6 @@ export const WeaveCode = ({ code }: { code?: string }) => {
           flexShrink: 1,
         }}
       >
-        <span>Your weave code:</span>
         {code ? (
           <Link to={`/w/${code}`} target={"_blank"}>
             {code}

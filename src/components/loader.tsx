@@ -38,5 +38,5 @@ export const Loader: FC<{ style?: keyof typeof EFFECTS }> = ({
 
 const containerStyles = css({
   fontFamily: "monospace",
-  fontSize: "1.5em",
+  fontSize: "16px",
 });

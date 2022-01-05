@@ -1,4 +1,5 @@
 import { createStitches } from "@stitches/react";
+import { darken, lighten } from "color2k";
 
 export const {
   styled,
@@ -19,6 +20,7 @@ export const {
       yellow: "yellow",
       blue: "blue",
       green: "green",
+      green200: lighten("green", 0.04),
     },
     shadows: {
       primary:
@@ -26,6 +28,8 @@ export const {
     },
   },
   media: {
-    bp1: "(min-width: 480px)",
+    bp1: "(min-width: 640px)",
+    bp2: "(min-width: 768px)",
+    bp3: "(min-width: 1024px)",
   },
 });
